@@ -10,4 +10,8 @@ public class Account {
         this.balance = balance;
         this.accountType = accountType;
     }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
 }
