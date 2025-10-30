@@ -14,7 +14,6 @@ public class BankServiceImpl implements BankService {
         String customerId = UUID.randomUUID().toString();
 
         String accountNumber = getAccountNumber();
-        // String accountNumber = UUID.randomUUID().toString();
         Account account = new Account(accountNumber, customerId, 0.0, accountType);
         accountRepo.saveAccount(account);
 
@@ -23,13 +22,11 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<Account> listAccounts() {
-        // FIX: removed extra semicolons and unnecessary cast
         return accountRepo.findAll().stream()
                 .sorted(Comparator.comparing(Account::getAccountNumber))
                 .collect(Collectors.toList());
     }
 
-    // After refactoring to method
     private String getAccountNumber() {
         int size = accountRepo.findAll().size() + 1;
         return String.format("ACC%05d", size);
@@ -38,23 +35,46 @@ public class BankServiceImpl implements BankService {
     @Override
     public void deposit(String accNumber, Double amount, String note) {
         Account account = accountRepo.findByNumber(accNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found " + accNumber));
+            .orElseThrow(() -> new RuntimeException("Account not found " + accNumber));
 
-        // Update balance
         account.setBalance(account.getBalance() + amount);
-        accountRepo.updateAccount(account); // <-- make sure this exists
+        accountRepo.updateAccount(account);
 
-        // ✅ Correct argument order
         Transaction transaction = new Transaction(
-                UUID.randomUUID().toString(), // id
-                Type.DEPOSIT, // type
-                account.getAccountNumber(), // account number
-                amount, // amount
-                LocalDateTime.now(), // timestamp
-                note // note
+                UUID.randomUUID().toString(),
+                Type.DEPOSIT,
+                account.getAccountNumber(),
+                amount,
+                LocalDateTime.now(),
+                note
         );
-
         transactionRepo.add(transaction);
     }
 
+    @Override
+    public void withdraw(String accNumber, double amount, String note) {
+        Account account = accountRepo.findByNumber(accNumber)
+                .orElseThrow(() -> new RuntimeException("Account not found " + accNumber));
+
+        // ✅ Using compareTo (matches the video)
+        if (account.getBalance().compareTo(amount) < 0)
+            throw new RuntimeException("Insufficient balance in account " + accNumber);
+
+        account.setBalance(account.getBalance() - amount);
+        accountRepo.updateAccount(account);
+
+        Transaction transaction = new Transaction(
+                UUID.randomUUID().toString(),
+                Type.WITHDRAWAL,
+                account.getAccountNumber(),
+                amount,
+                LocalDateTime.now(),
+                note
+        );
+        transactionRepo.add(transaction);
+    }
+
+    @Override
+    public void transfer(String fromAccount, String to, Double amount, String string) {
+    }
 }

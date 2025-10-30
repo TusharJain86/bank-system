@@ -16,7 +16,7 @@ public class Account {
     }
 
     // ✅ FIXED: return a double, not String
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
@@ -25,7 +25,7 @@ public class Account {
     }
 
     // (Optional) Add setters if you plan to update these fields later
-    public void setBalance(double balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
