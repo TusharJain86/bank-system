@@ -16,4 +16,12 @@ public class Transaction {
         this.timestamp = timestamp;
         this.note = note;
     }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
 }
