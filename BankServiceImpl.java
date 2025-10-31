@@ -75,6 +75,31 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void transfer(String fromAccount, String to, Double amount, String string) {
+    public void transfer(String fromAccount, String to, Double amount, String note) {
+        if(fromAccount.equals(to))
+            throw new RuntimeException("Cannot transfer to the same account");
+            Account fromAcc = accountRepo.findByNumber(fromAccount)
+                .orElseThrow(() -> new RuntimeException("Account not found " + fromAccount));
+
+            Account toAcc = accountRepo.findByNumber(to)
+                .orElseThrow(() -> new RuntimeException("Account not found " + to));
+
+            if (fromAcc.getBalance().compareTo(amount) < 0)
+            throw new RuntimeException("Insufficient balance in account ");
+
+            fromAcc.setBalance(fromAcc.getBalance() - amount);
+            toAcc.setBalance(toAcc.getBalance() + amount);
+            accountRepo.updateAccount(fromAcc);
+
+            transactionRepo.add(new Transaction(
+                    UUID.randomUUID().toString(),
+                    Type.TRANSFER_IN,
+                    fromAcc.getAccountNumber(),
+                    amount,
+                    LocalDateTime.now(),
+                    note));
+
+            transactionRepo.add(new Transaction(UUID.randomUUID().toString(), Type.TRANSFER_OUT, toAcc.getAccountNumber(),
+                    amount, LocalDateTime.now(), note));
     }
 }
