@@ -17,11 +17,10 @@ public class Transaction {
         this.note = note;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+    public String getId() { return id; }
+    public Type getType() { return type; }
+    public String getAccountNumber() { return accountNumber; }
+    public double getAmount() { return amount; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public String getNote() { return note; }
 }

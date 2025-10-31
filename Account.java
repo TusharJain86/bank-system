@@ -15,7 +15,6 @@ public class Account {
         return accountNumber;
     }
 
-    // ✅ FIXED: return a double, not String
     public Double getBalance() {
         return balance;
     }
@@ -24,12 +23,19 @@ public class Account {
         return accountType;
     }
 
-    // (Optional) Add setters if you plan to update these fields later
+    public String getCustomerId() {
+        return customerId;
+    }
+
     public void setBalance(Double balance) {
         this.balance = balance;
     }
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public Object getTimestamp() {
+        throw new UnsupportedOperationException("Unimplemented method 'getTimestamp'");
     }
 }

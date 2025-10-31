@@ -20,16 +20,15 @@ public class Main {
                     """);
             System.out.print("Please select an option: ");
             String choice = scanner.nextLine().trim();
-            System.out.println("You selected option: " + choice);
 
             switch (choice) {
                 case "1" -> openAccount(scanner, bankService);
-                case "2" -> deposit(scanner, bankService); // ✅ fixed
+                case "2" -> deposit(scanner, bankService);
                 case "3" -> withdraw(scanner, bankService);
                 case "4" -> transfer(scanner, bankService);
-                case "5" -> accountStatement(scanner);
-                case "6" -> listAllAccounts(bankService); // ✅ simplified
-                case "7" -> searchAccountByHolderName(scanner);
+                case "5" -> accountStatement(scanner, bankService);
+                case "6" -> listAllAccounts(bankService);
+                case "7" -> searchAccountByHolderName(scanner, bankService);
                 case "0" -> isRunning = false;
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -54,13 +53,13 @@ public class Main {
         String accountNumber = bankService.openAccount(name, email, type);
 
         if (initial > 0) {
-            bankService.deposit(accountNumber, initial, "Initial deposit"); // ✅ fixed
+            bankService.deposit(accountNumber, initial, "Initial deposit");
         }
 
-        System.out.println("Account created successfully! Your account number is: " + accountNumber);
+        System.out.println("✅ Account created successfully! Your account number is: " + accountNumber);
     }
 
-    private static void deposit(Scanner scanner, BankService bankService) { // ✅ fixed signature
+    private static void deposit(Scanner scanner, BankService bankService) {
         System.out.print("Account Number: ");
         String accNumber = scanner.nextLine().trim();
 
@@ -68,7 +67,7 @@ public class Main {
         Double amount = Double.parseDouble(scanner.nextLine().trim());
 
         bankService.deposit(accNumber, amount, "Deposit via Main");
-        System.out.println("Deposit successful!");
+        System.out.println("✅ Deposit successful!");
     }
 
     private static void withdraw(Scanner scanner, BankService bankService) {
@@ -78,8 +77,8 @@ public class Main {
         System.out.print("Amount: ");
         Double amount = Double.parseDouble(scanner.nextLine().trim());
 
-        bankService.withdraw(accNumber, amount, "withdraw via Main");
-        System.out.println("Withdraw successful!");
+        bankService.withdraw(accNumber, amount, "Withdraw via Main");
+        System.out.println("✅ Withdraw successful!");
     }
 
     private static void transfer(Scanner scanner, BankService bankService) {
@@ -88,24 +87,33 @@ public class Main {
 
         System.out.print("To Account: ");
         String to = scanner.nextLine().trim();
+
         System.out.print("Amount: ");
         Double amount = Double.parseDouble(scanner.nextLine().trim());
 
         bankService.transfer(fromAccount, to, amount, "Transfer");
-        System.out.println("Transfer successful!");
+        System.out.println("✅ Transfer successful!");
     }
 
-    private static void accountStatement(Scanner scanner) {
-        // TODO: Implement account statement logic
+    private static void accountStatement(Scanner scanner, BankService bankService) {
+        System.out.print("Account Number: ");
+        String accStatement = scanner.nextLine().trim();
+        bankService.getAccountStatement(accStatement).forEach(t ->
+            System.out.println(t.getTimestamp() + " | " + t.getType() + " | " + t.getAmount() + " | " + t.getNote())
+        );
     }
 
     private static void listAllAccounts(BankService bankService) {
         bankService.listAccounts().forEach(a ->
-            System.out.println(a.getAccountNumber() + " - " + a.getAccountType() + " - " + a.getBalance())
+            System.out.println(a.getAccountNumber() + " - " + a.getAccountType() + " - Balance: " + a.getBalance())
         );
     }
 
-    private static void searchAccountByHolderName(Scanner scanner) {
-        // TODO: Implement search logic
+    private static void searchAccountByHolderName(Scanner scanner, BankService bankService) {
+        System.out.print("Customer name contains: ");
+        String q = scanner.nextLine().trim();
+        bankService.searchAccountByHolderName(q).forEach(a ->
+            System.out.println(a.getAccountNumber() + " | " + a.getAccountType() + " | Balance: " + a.getBalance())
+        );
     }
 }
