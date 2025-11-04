@@ -92,7 +92,7 @@ public class Main {
         Double amount = Double.parseDouble(scanner.nextLine().trim());
 
         bankService.transfer(fromAccount, to, amount, "Transfer");
-        System.out.println("✅ Transfer successful!");
+        System.out.println("Transfer successful!");
     }
 
     private static void accountStatement(Scanner scanner, BankService bankService) {
